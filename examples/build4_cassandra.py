@@ -2,21 +2,18 @@ from cassandra.cluster import Cluster
 from cassandra.auth import PlainTextAuthProvider
 import time
 
-# Conectar al cluster de Cassandra
+# Cluster connection
 cluster = Cluster(['127.0.0.1'])  # Reemplaza 'tu_direccion_ip_cassandra' por la dirección IP de tu cluster Cassandra
 session = cluster.connect()
 
-# Seleccionar el keyspace adecuado
+# Keyspace connection
 keyspace = 'empleados'  # Reemplaza 'nombre_del_keyspace' por el nombre de tu keyspace
 session.set_keyspace(keyspace)
 
-# Revisar consultas 3, 5, 6, y 7.
-# Revisar sobre todo la consulta 7.
 
+# First query:
 
-# Primera consulta:
-
-# INSERCION Q1
+# INSERT Q1
 def insert_data_Q1():
     query = """
     INSERT INTO liderazgoFutbol (nombre, apellido, ciudad, pais, habilidad, deporte)
@@ -38,7 +35,7 @@ def select_all_data_Q1():
     for row in result:
         print(row)
 
-# Consulta Q1
+# Query Q1
 def select_data_Q1():
     query = """
     SELECT nombre, apellido, ciudad, pais, habilidad, deporte
@@ -50,9 +47,9 @@ def select_data_Q1():
         print(row)
 
 
-# Segunda consulta:
+# Second query:
 
-# INSERCION Q2
+# INSERT Q2
 def insert_data_Q2():
     query = """
     INSERT INTO trabajosPrevios (nombre, apellido, ciudad, pais, habilidad, trabajoPrevio)
@@ -81,7 +78,7 @@ def select_all_data_Q2():
     for row in result:
         print(row)
 
-# Consulta Q2
+# Query Q2
 def select_data_Q2():
     query = """
     SELECT nombre, apellido, ciudad, pais, habilidad, trabajoPrevio
@@ -93,9 +90,9 @@ def select_data_Q2():
         print(row)
 
 
-# Tercera consulta:
+# Third query:
 
-# INSERCION Q3
+# INSERT Q3
 
 def insert_data_Q3():
     query = """
@@ -135,7 +132,7 @@ def select_all_data_Q3():
     for row in result:
         print(row)
 
-# Consulta Q3
+# Query Q3
 def select_data_Q3():
     query = """
     SELECT nombre, apellido, deportes
@@ -148,9 +145,9 @@ def select_data_Q3():
         print(row)
 
 
-# Cuarta consulta
+# Fourth query:
 
-# INSERCION Q4
+# INSERT Q4
 def insert_data_Q4():
     query = """
     INSERT INTO deporteRiesgo (nombre, apellido, ciudad, pais, tipoDeporte, anioIni)
@@ -179,7 +176,7 @@ def select_all_data_Q4():
     for row in result:
         print(row)
 
-# Consulta Q4
+# Query Q4
 def select_data_Q4():
     query = """
     SELECT nombre, apellido, ciudad, pais
@@ -191,9 +188,9 @@ def select_data_Q4():
         print(row)
 
 
-# Quinta consulta
+# Fifth query:
 
-# INSERCION Q5
+# INSERT Q5
 def insert_data_Q5():
     query = """
     INSERT INTO habilidadesPorEmpleado (nombre, apellido, ciudad, pais, habilidades)
@@ -229,7 +226,7 @@ def select_all_data_Q5():
     for row in result:
         print(row)
 
-# Consulta Q5
+# Query Q5
 def select_data_Q5():
     query = """
     SELECT nombre, apellido, ciudad, pais, habilidades
@@ -241,9 +238,9 @@ def select_data_Q5():
         print(row)
 
 
-# Sexta consulta
+# Sixth query:
 
-# INSERCION Q6
+# INSERT Q6
 def insert_data_Q6():
     query = """
     INSERT INTO programadoresDeportes (nombre, apellido, ciudad, pais, habilidad, deportes)
@@ -278,7 +275,7 @@ def select_all_data_Q6():
     for row in result:
         print(row)
 
-# Consulta Q6
+# Query Q6
 def select_data_Q6():
     query = """
     SELECT nombre, apellido, deportes
@@ -290,9 +287,9 @@ def select_data_Q6():
         print(row)
 
 
-# Septima consulta
+# Seventh Query
 
-# INSERCION Q7
+# INSERT Q7
 def insert_data_Q7():
     query = """
     INSERT INTO contaduriaDeportes (nombre, apellido, ciudad, pais, habilidad, tipoDeportes)
@@ -328,7 +325,7 @@ def select_all_data_Q7():
     for row in result:
         print(row)
 
-# Consulta Q7
+# Query Q7
 def select_data_Q7():
     query = """
     SELECT nombre, apellido, ciudad, pais
@@ -341,9 +338,9 @@ def select_data_Q7():
         print(row)
 
 
-# Octava consulta
+# Eighth query:
 
-# INSERCION Q8
+# INSERT Q8:
 def insert_data_Q8():
     query = """
     INSERT INTO expertoProgramador (nombre, apellido, ciudad, pais, habilidad, trabajoPrevio, anioIni, anioFin)
@@ -374,7 +371,7 @@ def select_all_data_Q8():
     for row in result:
         print(row)
 
-# Consulta Q8
+# Query Q8
 def select_data_Q8():
     query = """
     SELECT nombre, apellido, ciudad, pais, habilidad, trabajoPrevio
@@ -661,3 +658,89 @@ def menu():
 
 # Run program
 menu()
+
+
+'''
+CREATE TABLE liderazgoFutbol (
+	nombre text,
+	apellido text,
+	ciudad text,
+	pais text,
+	habilidad text,
+	deporte text,
+PRIMARY KEY ((habilidad, deporte), nombre, apellido)
+) WITH CLUSTERING ORDER BY (nombre DESC, apellido DESC);
+
+CREATE TABLE trabajosPrevios (
+    nombre text,
+    apellido text,
+    ciudad text,
+    pais text,
+    habilidad text,
+    trabajoPrevio text,
+    PRIMARY KEY ((habilidad), nombre, apellido)
+) WITH CLUSTERING ORDER BY (nombre DESC, apellido DESC);
+
+CREATE TABLE deportesEntre (
+    nombre text,
+    apellido text,
+    ciudad text,
+    pais text,
+    trabajoPrevio text,
+    anioIni int,
+    anioFin int,
+    deportes set<text>,
+    PRIMARY KEY ((trabajoPrevio, anioIni, anioFin), nombre, apellido)
+) WITH CLUSTERING ORDER BY (nombre DESC, apellido DESC);
+
+CREATE TABLE deporteRiesgo (
+    nombre text,
+    apellido text,
+    ciudad text,
+    pais text,
+    tipoDeporte text,
+    anioIni int,
+    PRIMARY KEY (tipoDeporte, anioIni, nombre, apellido)
+) WITH CLUSTERING ORDER BY (anioIni DESC, nombre DESC, apellido DESC);
+
+CREATE TABLE habilidadesPorEmpleado (
+    nombre text,
+    apellido text,
+    ciudad text,
+    pais text,
+    habilidades set<text>,
+    PRIMARY KEY ((nombre, apellido))
+);
+
+CREATE TABLE programadoresDeportes (
+    nombre text,
+    apellido text,
+    ciudad text,
+    pais text,
+    habilidad text,
+    deportes set<text>,
+    PRIMARY KEY ((habilidad), nombre, apellido)
+) WITH CLUSTERING ORDER BY (nombre DESC, apellido DESC);
+
+CREATE TABLE contaduriaDeportes (
+    nombre text,
+    apellido text,
+    ciudad text,
+    pais text,
+    habilidad text,
+    tipoDeportes list<text>,
+    PRIMARY KEY ((habilidad), nombre, apellido)
+) WITH CLUSTERING ORDER BY (nombre DESC, apellido DESC);
+
+CREATE TABLE expertoProgramador (
+    nombre text,
+    apellido text,
+    ciudad text,
+    pais text,
+    habilidad text,
+    trabajoPrevio text,
+    anioIni int,
+    anioFin int,
+    PRIMARY KEY ((habilidad, trabajoPrevio, anioIni, anioFin), nombre, apellido)
+) WITH CLUSTERING ORDER BY (nombre DESC, apellido DESC);
+'''
